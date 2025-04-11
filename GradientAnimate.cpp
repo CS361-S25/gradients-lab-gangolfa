@@ -6,9 +6,11 @@ emp::web::Document doc{"target"};
 class GradientAnimator : public emp::web::Animate
 {
     emp::web::Canvas canvas{500, 500, "canvas"};
-    double number = 0.0;
     // Instance variable that is a vector of vectors of floats
     std::vector<std::vector<float>> cells;
+    double number = 0.0;
+    int x = 0;
+    int y = 0;
     const int num_w_boxes = 10;
     const int num_h_boxes = 10;
     const int rect_len = 50;
@@ -32,7 +34,10 @@ public:
         {
             for (int y = 0; y < num_h_boxes; y++)
             {
-                canvas.Rect(x * rect_len, y * rect_len, rect_len, rect_len, emp::ColorHSV(0, 0, 0.5), "black");
+                // Use cell location in vector to set color
+                // Draw a rectangle using the ColorHSV argument with the color being based on the cell vector value
+                canvas.Rect(x * rect_len, y * rect_len, rect_len, rect_len,
+                            emp::ColorHSV(0, 0, 1), "Black");
             }
         }
 
@@ -40,8 +45,18 @@ public:
         if (number > 1)
         {
             number = 0;
+            x = x + 1;
         }
-        canvas.Rect(rect_len, rect_len, rect_len, rect_len, emp::ColorHSV(0, 0, number), "black");
+        if (x >= num_w_boxes)
+        {
+            x = 0;
+            y = y + 1;
+        }
+        if (y >= num_h_boxes)
+        {
+            y = 0;
+        }
+        canvas.Rect(x * rect_len, y * rect_len, rect_len, rect_len, emp::ColorHSV(0, 0, number), "black");
     }
 };
 
